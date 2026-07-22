@@ -1,0 +1,6 @@
+.env 
+.env.example
+node_modules
+WereableWater_API.postman_collection.json
+in
+node_modules

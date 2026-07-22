@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+enum DeviceStatus {
+  unclaimed
+  active
+  revoked
+}
+
+enum ReadingSource {
+  http
+  mqtt
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  createdAt    DateTime @default(now())
+  devices      Device[]
+}
+
+model Device {
+  id              String        @id @default(cuid())
+  userId          String?
+  user            User?         @relation(fields: [userId], references: [id])
+  deviceUid       String        @unique
+  name            String?
+  claimCode       String        @unique
+  deviceTokenHash String?
+  status          DeviceStatus  @default(unclaimed)
+  lastSeenAt      DateTime?
+  createdAt       DateTime      @default(now())
+  readings        Reading[]
+  config          DeviceConfig?
+
+  @@index([claimCode])
+  @@index([deviceUid])
+}
+
+model Reading {
+  id         String        @id @default(cuid())
+  deviceId   String
+  device     Device        @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  nivel      Float
+  bomba      Boolean
+  source     ReadingSource
+  recordedAt DateTime      @default(now())
+
+  @@index([deviceId, recordedAt])
+}
+
+model DeviceConfig {
+  deviceId  String @id
+  device    Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  critico   Int    @default(20)
+  bajo      Int    @default(40)
+  medio     Int    @default(60)
+  maxLiters Int    @default(1000)
+}

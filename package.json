@@ -1,0 +1,33 @@
+{
+  "name": "apiWeareable",
+  "version": "1.0.0",
+  "description": "API WereableWater — auth, devices, telemetría HTTP+MQTT",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "node --watch src/index.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:seed": "node prisma/seed.js",
+    "device:create": "node scripts/createDevice.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.24.0",
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.2",
+    "jsonwebtoken": "^9.0.3",
+    "mqtt": "^5.15.2"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0"
+  }
+}
