@@ -1,0 +1,24 @@
+name: Deploy backend to AzureVM
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via ssh
+        uses: appleboy/shh-action@v1.0.0
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USERNAME }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          port: 22
+          script: |
+            export PATH="/home/azureuser/.nvm/versions/node/v24.18.0/bin:/home/azureuser/.local/share/pnpm/bin:$PATH"
+            cd ~/back-end-embebidos
+            git fetch origin main
+            git reset --hard origin/main
+            pnpm install --frozen-lockfile
+            pm2 restart wereablewater-api
